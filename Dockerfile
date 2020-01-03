@@ -1,7 +1,6 @@
 FROM alpine:3.10
 
-RUN apk update -f \
-  && apk --no-cache add -f \
+RUN apk --no-cache add \
   openssl \
   openssh-client \
   coreutils \
@@ -11,7 +10,7 @@ RUN apk update -f \
   tzdata \
   oath-toolkit-oathtool \
   tar \
-  && rm -rf /var/cache/apk/*
+  tini
 
 ENV LE_CONFIG_HOME /acme.sh
 
@@ -26,5 +25,5 @@ RUN ln -s  /root/.acme.sh/acme.sh  /usr/local/bin/acme.sh && crontab -l | grep a
 
 VOLUME /acme.sh
 
-ENTRYPOINT ["/entry.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "/entry.sh"]
 CMD ["--help"]
