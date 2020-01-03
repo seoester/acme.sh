@@ -10,8 +10,7 @@ case "$1" in
   exec /root/.acme.sh/acme.sh --config-home "$LE_CONFIG_HOME" "$@"
   ;;
 daemon)
-  trap "echo stop && killall crond && exit 0" SIGTERM SIGINT
-  crond && while true; do sleep 1; done;
+  exec crond -l 2 -f
   ;;
 *)
   exec "$@"
